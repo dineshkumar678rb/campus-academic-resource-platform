@@ -25,10 +25,6 @@ A full-stack academic resource sharing platform that allows students to upload, 
 ### Database
 - MongoDB
 
-## 📸 Screenshots
-
-> Add screenshots here.
-
 ## 🚀 Installation
 
 ```bash
