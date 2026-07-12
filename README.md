@@ -1,39 +1,25 @@
-# 📚 Student Resource Hub
+# ♿ Inclusive Scribe Portal
 
-A full-stack academic resource sharing platform that allows students to upload, browse, search, and download study materials such as notes, previous year question papers, and model papers.
+An accessibility-focused web application developed to connect students requiring scribes with volunteers willing to assist during examinations.
 
 ## ✨ Features
 
-- Upload study materials
-- Download resources
-- Search and filter documents
-- Resource rating system
-- Responsive user interface
+- Volunteer registration
+- Student registration
+- High-contrast mode
+- Voice reader
+- Zoom accessibility controls
+- Responsive design
 
 ## 🛠 Tech Stack
 
-### Frontend
-- React
 - HTML
 - CSS
 - JavaScript
 
-### Backend
-- Node.js
-- Express.js
 
-### Database
-- MongoDB
+## 🚀 How to Run
 
-## 🚀 Installation
+Download or clone the repository and open **index.html** in any modern browser.
 
-```bash
-git clone <repository-url>
-
-cd frontend
-npm install
-npm run dev
-
-cd backend
-npm install
-npm start
+## Folder Structure
