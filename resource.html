@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Student Resource Hub</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif}
+  :root{
+    --bg1:#667eea;--bg2:#764ba2;
+    --glass:rgba(255,255,255,0.15);--glass-border:rgba(255,255,255,0.25);
+    --text:#fff;--muted:rgba(255,255,255,0.75);
+    --accent:#ffd166;--accent2:#06d6a0;--danger:#ef476f;
+    --card-bg:rgba(255,255,255,0.1);
+    --input-bg:rgba(255,255,255,0.15);
+  }
+  body.light{
+    --bg1:#dbeafe;--bg2:#ede9fe;
+    --glass:rgba(255,255,255,0.55);--glass-border:rgba(255,255,255,0.7);
+    --text:#1e293b;--muted:#475569;
+    --card-bg:rgba(255,255,255,0.6);
+    --input-bg:rgba(255,255,255,0.7);
+  }
+  body{
+    min-height:100vh;color:var(--text);
+    background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 100%);
+    background-attachment:fixed;padding-bottom:60px;transition:.3s;
+  }
+  header{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    background:var(--glass);border-bottom:1px solid var(--glass-border);
+    padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  }
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.3rem}
+  .logo-icon{
+    width:38px;height:38px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:grid;place-items:center;font-size:1.2rem;color:#111
+  }
+  nav{display:flex;gap:6px;flex-wrap:wrap}
+  nav button{
+    background:transparent;border:1px solid transparent;color:var(--text);
+    padding:8px 14px;border-radius:10px;cursor:pointer;font-size:.9rem;transition:.2s
+  }
+  nav button:hover,nav button.active{background:var(--glass);border-color:var(--glass-border)}
+  .theme-btn{
+    background:var(--glass);border:1px solid var(--glass-border);color:var(--text);
+    width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.1rem
+  }
+  main{max-width:1200px;margin:0 auto;padding:24px}
+  .glass{
+    background:var(--glass);border:1px solid var(--glass-border);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    border-radius:18px;padding:22px;box-shadow:0 8px 32px rgba(0,0,0,.1)
+  }
+  .hero{margin-bottom:24px;animation:fadeUp .6s ease}
+  .hero h1{font-size:2rem;margin-bottom:8px}
+  .hero p{color:var(--muted);max-width:780px;line-height:1.6}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:20px 0}
+  .stat{padding:18px;text-align:center;animation:fadeUp .5s ease}
+  .stat .num{font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat .lbl{color:var(--muted);font-size:.85rem;margin-top:4px}
+  .section{margin-top:24px}
+  .section h2{margin-bottom:14px;font-size:1.3rem;display:flex;align-items:center;gap:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+  .card{padding:18px;transition:.25s;cursor:default;animation:fadeUp .4s ease}
+  .card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,.18)}
+  .card h3{font-size:1.05rem;margin-bottom:6px}
+  .card .desc{color:var(--muted);font-size:.85rem;margin-bottom:10px;line-height:1.5}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:600;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));color:#111}
+  .meta{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:.75rem;color:var(--muted)}
+  .card-actions{display:flex;gap:8px;margin-top:12px}
+  .btn{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));color:#111;
+    border:none;padding:8px 14px;border-radius:10px;cursor:pointer;font-weight:600;font-size:.85rem;transition:.2s
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.2)}
+  .btn-ghost{background:var(--glass);color:var(--text);border:1px solid var(--glass-border)}
+  .btn-danger{background:var(--danger);color:#fff}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  input,select,textarea{
+    background:var(--input-bg);border:1px solid var(--glass-border);color:var(--text);
+    padding:10px 14px;border-radius:10px;font-size:.9rem;outline:none;font-family:inherit;width:100%
+  }
+  input::placeholder,textarea::placeholder{color:var(--muted)}
+  .toolbar input{flex:1;min-width:200px}
+  .toolbar select{width:auto;min-width:150px}
+  .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+  .cat-card{padding:18px;text-align:center;cursor:pointer;transition:.25s}
+  .cat-card:hover{transform:translateY(-3px) scale(1.03)}
+  .cat-icon{font-size:1.8rem;margin-bottom:6px}
+  .cat-count{font-size:.75rem;color:var(--muted);margin-top:4px}
+  form .row{display:grid;gap:12px;margin-bottom:12px}
+  form label{font-size:.85rem;color:var(--muted);margin-bottom:4px;display:block}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:640px){.two-col{grid-template-columns:1fr}}
+  .ann-item,.tool-card{padding:14px;margin-bottom:10px;border-radius:12px;background:var(--card-bg);border:1px solid var(--glass-border)}
+  .ann-item .date{font-size:.75rem;color:var(--accent);font-weight:600}
+  .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+  .timer-display{font-size:2.2rem;text-align:center;font-weight:700;margin:10px 0;font-variant-numeric:tabular-nums}
+  .timer-controls{display:flex;gap:8px;justify-content:center}
+  .quick-notes textarea{min-height:120px;resize:vertical}
+  .links a{display:block;padding:8px 12px;background:var(--card-bg);border:1px solid var(--glass-border);border-radius:8px;margin-bottom:6px;color:var(--text);text-decoration:none;font-size:.85rem;transition:.2s}
+  .links a:hover{background:var(--glass);transform:translateX(4px)}
+  .view{display:none;animation:fadeUp .4s ease}
+  .view.active{display:block}
+  .empty{text-align:center;padding:30px;color:var(--muted)}
+  .bookmark-btn{background:transparent;border:none;color:var(--accent);cursor:pointer;font-size:1.1rem}
+  .trending-tag{display:inline-block;background:var(--danger);color:#fff;padding:2px 8px;border-radius:12px;font-size:.65rem;font-weight:700;margin-left:6px}
+  footer{text-align:center;padding:20px;color:var(--muted);font-size:.85rem;margin-top:30px}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .toast{position:fixed;bottom:20px;right:20px;background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(20px);padding:12px 18px;border-radius:12px;color:var(--text);z-index:100;animation:fadeUp .3s ease}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="logo-icon">📚</div> Student Resource Hub</div>
+  <nav id="nav">
+    <button data-view="dashboard" class="active">Dashboard</button>
+    <button data-view="resources">Resources</button>
+    <button data-view="upload">Upload</button>
+    <button data-view="bookmarks">Bookmarks</button>
+    
+    
+    <button data-view="about">About</button>
+  </nav>
+  <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+</header>
+
+<main>
+  <!-- DASHBOARD -->
+  <section class="view active" id="view-dashboard">
+    <div class="glass hero">
+      <h1>Welcome back, Student 👋</h1>
+      <p>Your one-stop hub for notes, question papers, programming guides, interview prep, internships, and more.</p>
+    </div>
+
+    <div class="stats">
+      <div class="glass stat"><div class="num" id="stat-total">0</div><div class="lbl">Total Resources</div></div>
+      <div class="glass stat"><div class="num" id="stat-categories">0</div><div class="lbl">Categories</div></div>
+      <div class="glass stat"><div class="num" id="stat-bookmarks">0</div><div class="lbl">Bookmarks</div></div>
+      <div class="glass stat"><div class="num" id="stat-views">0</div><div class="lbl">Total Views</div></div>
+    </div>
+
+    <div class="section">
+      <h2>📂 Popular Categories</h2>
+      <div class="cat-grid" id="popularCats"></div>
+    </div>
+
+    <div class="section">
+      <h2>🆕 Recently Added</h2>
+      <div class="grid" id="recentList"></div>
+    </div>
+
+    <div class="section">
+      <h2>🔥 Trending Resources</h2>
+      <div class="grid" id="trendingList"></div>
+    </div>
+
+    <div class="section">
+      <h2>👁️ Recently Viewed</h2>
+      <div class="grid" id="viewedList"></div>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="view" id="view-resources">
+    <div class="glass">
+      <h2 style="margin-bottom:14px">📚 All Resources</h2>
+      <div class="toolbar">
+        <input id="searchInput" placeholder="🔍 Search by title or keyword..." />
+        <select id="filterCat"><option value="">All Categories</option></select>
+        <select id="sortBy">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="popular">Most Popular</option>
+        </select>
+      </div>
+      <div class="grid" id="resourceList"></div>
+    </div>
+  </section>
+
+  <!-- UPLOAD -->
+  <section class="view" id="view-upload">
+    <div class="glass" style="max-width:680px;margin:0 auto">
+      <h2 style="margin-bottom:16px">⬆️ Upload a Resource</h2>
+      <form id="uploadForm">
+        <div class="row"><label>Resource Title</label><input id="rTitle" required placeholder="e.g. Data Structures Notes Unit 1" /></div>
+        <div class="row"><label>Description</label><textarea id="rDesc" required placeholder="Brief description..." rows="3"></textarea></div>
+        <div class="two-col">
+          <div><label>Category</label><select id="rCat" required></select></div>
+          <div><label>File (any type)</label><input type="file" id="rFile" /></div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px">
+          <button type="submit" class="btn">Submit Resource</button>
+          <button type="reset" class="btn btn-ghost">Reset</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- BOOKMARKS -->
+  <section class="view" id="view-bookmarks">
+    <div class="glass">
+      <h2 style="margin-bottom:14px">🔖 Your Bookmarks</h2>
+      <div class="grid" id="bookmarkList"></div>
+    </div>
+  </section>
+
+
+
+  <!-- ABOUT -->
+  <section class="view" id="view-about">
+    <div class="glass" style="margin-bottom:18px">
+      <h2 style="margin-bottom:10px">ℹ️ About This Project</h2>
+      <p style="line-height:1.7;color:var(--muted)">
+        The Student Resource Hub is a centralized platform that helps students access academic materials,
+        previous year papers, programming resources, interview preparation content, and career development
+        resources from a single location. The goal is to improve accessibility, organization, and
+        collaboration among students.
+      </p>
+    </div>
+    <div class="glass">
+      <h2 style="margin-bottom:14px">💬 Feedback</h2>
+      <form id="feedbackForm">
+        <div class="row"><label>Your Name</label><input id="fbName" required /></div>
+        <div class="row"><label>Feedback</label><textarea id="fbMsg" rows="4" required placeholder="Share your thoughts..."></textarea></div>
+        <button class="btn" type="submit">Send Feedback</button>
+      </form>
+      <div id="feedbackList" style="margin-top:20px"></div>
+    </div>
+  </section>
+</main>
+
+<footer>© 2026 Student Resource Hub · Built for students, by students</footer>
+
+<script>
+const CATEGORIES = [
+  {id:'notes',name:'Notes',icon:'📒'},
+  {id:'pyq',name:'Previous Year Papers',icon:'📑'},
+  {id:'assignments',name:'Assignments',icon:'✏️'},
+  {id:'study',name:'Study Materials',icon:'📚'},
+  {id:'programming',name:'Programming',icon:'💻'},
+  {id:'interview',name:'Interview Prep',icon:'🎤'},
+  {id:'career',name:'Career Development',icon:'🚀'},
+  {id:'internship',name:'Internships',icon:'🏢'},
+];
+
+const LS={
+  get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},
+  set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))
+};
+
+let resources = LS.get('srh.resources', null);
+if(!resources){
+  resources = [
+    {id:1,title:'DSA Complete Notes',desc:'Comprehensive data structures and algorithms notes for semester 3.',cat:'notes',date:Date.now()-86400000*2,views:45},
+    {id:2,title:'DBMS Previous Year Paper 2024',desc:'End semester question paper with solutions.',cat:'pyq',date:Date.now()-86400000*5,views:78},
+    {id:3,title:'Python for Beginners',desc:'Complete Python programming guide with examples.',cat:'programming',date:Date.now()-86400000*1,views:120},
+    {id:4,title:'System Design Interview Guide',desc:'Top patterns asked in FAANG interviews.',cat:'interview',date:Date.now()-86400000*7,views:95},
+    {id:5,title:'Resume Building Workshop',desc:'How to build an ATS-friendly resume.',cat:'career',date:Date.now()-86400000*3,views:60},
+    {id:6,title:'Summer Internship 2026 List',desc:'Top companies hiring summer interns.',cat:'internship',date:Date.now()-86400000*4,views:88},
+    {id:7,title:'OS Assignment - Process Scheduling',desc:'Sample assignment with solutions.',cat:'assignments',date:Date.now()-86400000*10,views:32},
+    {id:8,title:'Discrete Math Study Guide',desc:'All formulas and theorems in one place.',cat:'study',date:Date.now()-86400000*6,views:50},
+  ];
+  LS.set('srh.resources',resources);
+}
+let bookmarks = LS.get('srh.bookmarks',[]);
+let recentlyViewed = LS.get('srh.viewed',[]);
+
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+
+// Theme
+const themeBtn=$('#themeBtn');
+if(LS.get('srh.theme','dark')==='light'){document.body.classList.add('light');themeBtn.textContent='☀️'}
+themeBtn.onclick=()=>{
+  document.body.classList.toggle('light');
+  const t=document.body.classList.contains('light')?'light':'dark';
+  LS.set('srh.theme',t);themeBtn.textContent=t==='light'?'☀️':'🌙';
+};
+
+// Nav
+$$('#nav button').forEach(b=>b.onclick=()=>{
+  $$('#nav button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  $$('.view').forEach(v=>v.classList.remove('active'));
+  $('#view-'+b.dataset.view).classList.add('active');
+  render();
+});
+
+// Populate category selects
+const catSelects=[$('#filterCat'),$('#rCat')];
+CATEGORIES.forEach(c=>{
+  catSelects.forEach(s=>{
+    const o=document.createElement('option');o.value=c.id;o.textContent=c.icon+' '+c.name;s.appendChild(o);
+  });
+});
+
+function getCat(id){return CATEGORIES.find(c=>c.id===id)||{name:id,icon:'📄'}}
+function fmtDate(t){return new Date(t).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+
+function cardHTML(r){
+  const c=getCat(r.cat);
+  const isBm=bookmarks.includes(r.id);
+  const trending=r.views>=80;
+  return `<div class="glass card">
+    <div style="display:flex;justify-content:space-between;align-items:start;gap:8px">
+      <span class="badge">${c.icon} ${c.name}</span>
+      <button class="bookmark-btn" onclick="toggleBookmark(${r.id})" title="Bookmark">${isBm?'★':'☆'}</button>
+    </div>
+    <h3 style="margin-top:10px">${r.title}${trending?'<span class="trending-tag">🔥 HOT</span>':''}</h3>
+    <p class="desc">${r.desc}</p>
+    <div class="meta"><span>📅 ${fmtDate(r.date)}</span><span>👁️ ${r.views}</span></div>
+    <div class="card-actions">
+      <button class="btn" onclick="viewResource(${r.id})">View</button>
+      <button class="btn btn-ghost" onclick="deleteResource(${r.id})">Delete</button>
+    </div>
+  </div>`;
+}
+
+function viewResource(id){
+  const r=resources.find(x=>x.id===id);if(!r)return;
+  r.views++;
+  recentlyViewed=[id,...recentlyViewed.filter(x=>x!==id)].slice(0,4);
+  LS.set('srh.resources',resources);LS.set('srh.viewed',recentlyViewed);
+  toast(`📖 Opened "${r.title}"`);render();
+}
+function deleteResource(id){
+  if(!confirm('Delete this resource?'))return;
+  resources=resources.filter(r=>r.id!==id);
+  bookmarks=bookmarks.filter(b=>b!==id);
+  recentlyViewed=recentlyViewed.filter(v=>v!==id);
+  LS.set('srh.resources',resources);LS.set('srh.bookmarks',bookmarks);LS.set('srh.viewed',recentlyViewed);
+  render();
+}
+function toggleBookmark(id){
+  bookmarks=bookmarks.includes(id)?bookmarks.filter(b=>b!==id):[...bookmarks,id];
+  LS.set('srh.bookmarks',bookmarks);render();
+}
+
+function render(){
+  // stats
+  $('#stat-total').textContent=resources.length;
+  $('#stat-categories').textContent=CATEGORIES.length;
+  $('#stat-bookmarks').textContent=bookmarks.length;
+  $('#stat-views').textContent=resources.reduce((s,r)=>s+r.views,0);
+
+  // popular categories
+  const counts={};resources.forEach(r=>counts[r.cat]=(counts[r.cat]||0)+1);
+  $('#popularCats').innerHTML=CATEGORIES.map(c=>`
+    <div class="glass cat-card" onclick="filterByCat('${c.id}')">
+      <div class="cat-icon">${c.icon}</div>
+      <div style="font-weight:600">${c.name}</div>
+      <div class="cat-count">${counts[c.id]||0} resources</div>
+    </div>`).join('');
+
+  // recent
+  const recent=[...resources].sort((a,b)=>b.date-a.date).slice(0,4);
+  $('#recentList').innerHTML=recent.length?recent.map(cardHTML).join(''):'<div class="empty">No resources yet</div>';
+
+  // trending
+  const trending=[...resources].sort((a,b)=>b.views-a.views).slice(0,4);
+  $('#trendingList').innerHTML=trending.length?trending.map(cardHTML).join(''):'<div class="empty">No trending resources</div>';
+
+  // recently viewed
+  const viewed=recentlyViewed.map(id=>resources.find(r=>r.id===id)).filter(Boolean);
+  $('#viewedList').innerHTML=viewed.length?viewed.map(cardHTML).join(''):'<div class="empty">No recently viewed resources</div>';
+
+  // resources list
+  const q=$('#searchInput').value.toLowerCase();
+  const cf=$('#filterCat').value;
+  const sb=$('#sortBy').value;
+  let list=resources.filter(r=>(!q||r.title.toLowerCase().includes(q)||r.desc.toLowerCase().includes(q))&&(!cf||r.cat===cf));
+  list.sort((a,b)=>sb==='oldest'?a.date-b.date:sb==='popular'?b.views-a.views:b.date-a.date);
+  $('#resourceList').innerHTML=list.length?list.map(cardHTML).join(''):'<div class="empty">No resources match your filters</div>';
+
+  // bookmarks
+  const bm=bookmarks.map(id=>resources.find(r=>r.id===id)).filter(Boolean);
+  $('#bookmarkList').innerHTML=bm.length?bm.map(cardHTML).join(''):'<div class="empty">No bookmarks yet. Click ☆ on any resource to save it.</div>';
+}
+
+$('#searchInput').oninput=render;
+$('#filterCat').onchange=render;
+$('#sortBy').onchange=render;
+
+function filterByCat(c){
+  $$('#nav button').forEach(x=>x.classList.remove('active'));
+  document.querySelector('[data-view="resources"]').classList.add('active');
+  $$('.view').forEach(v=>v.classList.remove('active'));
+  $('#view-resources').classList.add('active');
+  $('#filterCat').value=c;render();
+}
+
+// Upload
+$('#uploadForm').onsubmit=e=>{
+  e.preventDefault();
+  resources.unshift({
+    id:Date.now(),title:$('#rTitle').value.trim(),desc:$('#rDesc').value.trim(),
+    cat:$('#rCat').value,date:Date.now(),views:0
+  });
+  LS.set('srh.resources',resources);
+  e.target.reset();
+  toast('✅ Resource uploaded!');
+  document.querySelector('[data-view="resources"]').click();
+};
+
+// CGPA Calculator
+let subjectCount=0;
+function addSubject(){
+  subjectCount++;
+  const div=document.createElement('div');
+  div.style='display:grid;grid-template-columns:1fr 80px 80px;gap:6px;margin-bottom:6px';
+  div.innerHTML=`<input placeholder="Subject ${subjectCount}"/><input type="number" placeholder="Grade" min="0" max="10" class="grade"/><input type="number" placeholder="Credit" min="1" class="credit"/>`;
+  $('#cgpaSubjects').appendChild(div);
+}
+function calcCGPA(){
+  const grades=[...document.querySelectorAll('.grade')].map(i=>+i.value||0);
+  const credits=[...document.querySelectorAll('.credit')].map(i=>+i.value||0);
+  const tc=credits.reduce((s,c)=>s+c,0);
+  if(!tc){$('#cgpaResult').textContent='Add subjects first';return}
+  const cgpa=grades.reduce((s,g,i)=>s+g*credits[i],0)/tc;
+  $('#cgpaResult').textContent=`Your CGPA: ${cgpa.toFixed(2)}`;
+}
+addSubject();addSubject();addSubject();
+
+// Timer
+let timerSec=25*60,timerInt=null;
+function updTimer(){
+  const m=Math.floor(timerSec/60),s=timerSec%60;
+  $('#timerDisplay').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+$('#timerStart').onclick=()=>{
+  if(timerInt){clearInterval(timerInt);timerInt=null;$('#timerStart').textContent='Start';return}
+  $('#timerStart').textContent='Pause';
+  timerInt=setInterval(()=>{
+    if(timerSec<=0){clearInterval(timerInt);timerInt=null;$('#timerStart').textContent='Start';toast('⏰ Time up!');return}
+    timerSec--;updTimer();
+  },1000);
+};
+$('#timerReset').onclick=()=>{clearInterval(timerInt);timerInt=null;timerSec=25*60;updTimer();$('#timerStart').textContent='Start'};
+updTimer();
+
+// Quick notes
+const qn=$('#quickNotes');
+qn.value=LS.get('srh.notes','');
+qn.oninput=()=>LS.set('srh.notes',qn.value);
+
+// Feedback
+let feedback=LS.get('srh.feedback',[]);
+function renderFb(){
+  $('#feedbackList').innerHTML=feedback.length?'<h3 style="margin-bottom:10px;font-size:1rem">Recent Feedback</h3>'+feedback.map(f=>`<div class="ann-item"><div class="date">${f.name}</div><div style="margin-top:4px">${f.msg}</div></div>`).join(''):'';
+}
+$('#feedbackForm').onsubmit=e=>{
+  e.preventDefault();
+  feedback.unshift({name:$('#fbName').value,msg:$('#fbMsg').value});
+  LS.set('srh.feedback',feedback);e.target.reset();renderFb();toast('💚 Thanks for your feedback!');
+};
+renderFb();
+
+// Toast
+function toast(msg){
+  const t=document.createElement('div');t.className='toast';t.textContent=msg;
+  document.body.appendChild(t);setTimeout(()=>t.remove(),2200);
+}
+
+render();
+</script>
+</body>
+</html>
