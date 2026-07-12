@@ -1,15 +1,14 @@
-# ♿ Inclusive Scribe Portal
+# 📚 Student Resource Hub
 
-An accessibility-focused web application developed to connect students requiring scribes with volunteers willing to assist during examinations.
+A responsive web application built using **HTML, CSS, and JavaScript** that provides students with a centralized platform to access academic resources such as notes, previous year question papers, and model papers.
 
 ## ✨ Features
 
-- Volunteer registration
-- Student registration
-- High-contrast mode
-- Voice reader
-- Zoom accessibility controls
-- Responsive design
+- Browse academic resources
+- Search and filter study materials
+- Categorized resource sections
+- Download resource links
+- Responsive and user-friendly interface
 
 ## 🛠 Tech Stack
 
@@ -20,6 +19,18 @@ An accessibility-focused web application developed to connect students requiring
 
 ## 🚀 How to Run
 
-Download or clone the repository and open **index.html** in any modern browser.
+1. Clone or download this repository.
+2. Open `index.html` in any modern web browser.
+3. Start exploring the Student Resource Hub.
 
-## Folder Structure
+## 📂 Project Structure
+
+```
+Student-Resource-Hub/
+│── index.html
+│── style.css
+│── script.js
+│── assets/
+│── README.md
+```
+
